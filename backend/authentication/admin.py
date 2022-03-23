@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, UserFavorite
 
 admin.site.unregister(Group)
+admin.site.register(UserFavorite)
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'username', 'get_image', 'date_joined', 'last_login', 'is_active', 'is_admin')

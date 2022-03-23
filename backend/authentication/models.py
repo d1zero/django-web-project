@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils.html import mark_safe
+from albums.models import Album
+from artists.models import Artist
+from genres.models import Genre
+from playlists.models import Playlist
+
+from tracks.models import Track
 
 
 class CustomUserManager(BaseUserManager):
@@ -17,6 +23,8 @@ class CustomUserManager(BaseUserManager):
 
         user.set_password(password)
         user.save(using=self._db)
+        favs = UserFavorite.objects.create(user=user)
+        favs.save()
         return user
 
     def create_superuser(self, email, username, password):
@@ -75,3 +83,20 @@ class CustomUser(AbstractBaseUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+
+class UserFavorite(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    tracks = models.ManyToManyField(Track, related_name='favorite_tracks')
+    albums = models.ManyToManyField(Album, related_name='favorite_albums')
+    artists = models.ManyToManyField(Artist, related_name='favorite_artists')
+    playlists = models.ManyToManyField(Playlist, related_name='favorite_playlists')
+    genres = models.ManyToManyField(Genre, related_name='favorite_genres')
+
+    def __str__(self):
+        return f"{self.user.username}'s Favorites"
+
+
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'

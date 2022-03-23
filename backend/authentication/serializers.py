@@ -5,7 +5,7 @@ from .models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'password']
+        fields = ['id', 'email', 'username', 'password', 'date_joined', 'avatar']
         extra_kwargs = {
             'email': {'error_messages': {'required': 'Email must not be empty', 'blank': 'Email must not be empty'}},
             'username': {'error_messages': {'required': 'Username must not be empty', 'blank': 'Username must not be empty'}},
