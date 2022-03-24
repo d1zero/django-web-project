@@ -1,12 +1,10 @@
-from lib2to3.pgen2.parse import ParseError
-from django.db import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.conf import settings
 import jwt
-from rest_framework.exceptions import AuthenticationFailed, NotFound
+from rest_framework.exceptions import AuthenticationFailed, NotFound, ParseError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import update_last_login
 from .models import CustomUser, UserFavorite
@@ -100,13 +98,15 @@ class LogoutAPIView(APIView):
 
 class UpdateUserAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
     def patch(self, request):
         user = request.user
         data = request.data
         if 'username' in data and len(data.get('username')) > 0:
             try:
-                candidate = CustomUser.objects.get(username=data.get('username'))
-                raise AuthenticationFailed(detail='Username already taken', code=400)
+                candidate = CustomUser.objects.get(
+                    username=data.get('username'))
+                raise ParseError(detail='Username already taken')
             except CustomUser.DoesNotExist:
                 pass
             user.username = data.get('username')
