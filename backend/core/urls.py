@@ -2,10 +2,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from albums.urls import AlbumRouter
-from artists.urls import ArtistRouter
-from genres.urls import GenreRouter
-from playlists.urls import PlaylistRouter
 
 
 urlpatterns = [
