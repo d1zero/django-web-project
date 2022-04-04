@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
+from authentication.views import UserViewSet
 from genres.views import ToggleFavoriteGenreViewSet, GenreViewSet
 from albums.views import ToggleFavoriteAlbumViewSet, AlbumViewSet
 from artists.views import ToggleFavoriteArtistViewSet, ArtistViewSet
@@ -11,6 +12,7 @@ from tracks.views import ToggleFavoriteTrackViewSet, TrackViewSet
 
 
 router = routers.SimpleRouter()
+router.register('auth', UserViewSet)
 router.register('albums/toggle-favorite', ToggleFavoriteAlbumViewSet)
 router.register('albums', AlbumViewSet)
 router.register('artists/toggle-favorite', ToggleFavoriteArtistViewSet)
