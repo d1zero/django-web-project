@@ -11,7 +11,10 @@ class TrackViewSet(ModelViewSet):
     serializer_class = TrackSerializer
 
     def list(self, request):
-        return Response(self.serializer_class(self.queryset, many=True).data)
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
         try:

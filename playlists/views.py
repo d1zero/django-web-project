@@ -7,11 +7,14 @@ from .models import Playlist
 from .serializers import PlaylistSerializer
 
 class PlaylistViewSet(ModelViewSet):
-    queryset = Playlist.objects.all()
+    queryset = Playlist.objects.filter(is_visible=True, track__isnull=False)
     serializer_class = PlaylistSerializer
 
     def list(self, request):
-        return Response(self.serializer_class(self.queryset, many=True).data)
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
         try:
