@@ -2,6 +2,7 @@ from celery import shared_task
 from .models import Playlist
 from tracks.models import Track
 
+
 @shared_task
 def add():
     playlist = Playlist.objects.first()

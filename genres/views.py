@@ -6,6 +6,7 @@ from authentication.models import UserFavorite
 from .models import Genre
 from .serializers import GenreSerializer
 
+
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
@@ -22,6 +23,7 @@ class GenreViewSet(ModelViewSet):
             return Response(data)
         except Genre.DoesNotExist:
             raise NotFound(detail='Genre was not found')
+
 
 class ToggleFavoriteGenreViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -49,7 +51,8 @@ class ToggleFavoriteGenreViewSet(ModelViewSet):
 
     def create(self, request):
         user = request.user
-        if 'genreId' not in request.data or len(request.data.get('genreId')) < 1:
+        if 'genreId' not in request.data or \
+                len(request.data.get('genreId')) < 1:
             raise ParseError(detail='genreId must not be empty')
 
         pk = int(request.data.get('genreId'))
@@ -65,4 +68,4 @@ class ToggleFavoriteGenreViewSet(ModelViewSet):
         else:
             user_favs.genres.remove(genre)
         user_favs.save()
-        return Response({'message':'success'})
+        return Response({'message': 'success'})

@@ -5,9 +5,12 @@ from .models import CustomUser, UserFavorite
 
 admin.site.unregister(Group)
 admin.site.register(UserFavorite)
+
+
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('email', 'username', 'get_image', 'date_joined', 'last_login', 'is_active', 'is_admin')
+    list_display = ('email', 'username', 'get_image', 'date_joined',
+                    'last_login', 'is_active', 'is_admin')
     search_fields = ('email', 'username',)
     readonly_fields = ('date_joined', 'last_login', 'get_image',)
     exclude = ('password', 'token', 'avatar')
@@ -15,4 +18,3 @@ class CustomUserAdmin(UserAdmin):
     filter_horizontal = ()
     list_filter = ()
     fieldsets = ()
-

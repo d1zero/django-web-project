@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Artist(models.Model):
     nickname = models.CharField(
         verbose_name='Псевдоним', max_length=255, blank=True)
@@ -8,7 +9,8 @@ class Artist(models.Model):
     last_name = models.CharField(
         verbose_name='Фамилия исполнителя', max_length=255)
     date_of_birth = models.DateField(verbose_name='Дата рождения')
-    photo = models.ImageField(verbose_name='Фото', upload_to='images/artists_photos')
+    photo = models.ImageField(verbose_name='Фото',
+                              upload_to='images/artists_photos')
     about = models.TextField(verbose_name='Об исполнителе')
 
     def __str__(self):

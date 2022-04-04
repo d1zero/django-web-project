@@ -6,6 +6,7 @@ from authentication.models import UserFavorite
 from .models import Album
 from .serializers import AlbumSerializer
 
+
 class AlbumViewSet(ModelViewSet):
     queryset = Album.objects.all()
     serializer_class = AlbumSerializer
@@ -22,7 +23,6 @@ class AlbumViewSet(ModelViewSet):
             return Response(data)
         except Album.DoesNotExist:
             raise NotFound(detail='Album was not found')
-
 
 
 class ToggleFavoriteAlbumViewSet(ModelViewSet):
@@ -51,7 +51,8 @@ class ToggleFavoriteAlbumViewSet(ModelViewSet):
 
     def create(self, request):
         user = request.user
-        if 'albumId' not in request.data or len(request.data.get('albumId')) < 1:
+        if 'albumId' not in request.data or \
+                len(request.data.get('albumId')) < 1:
             raise ParseError(detail='albumId must not be empty')
 
         pk = int(request.data.get('albumId'))
@@ -67,4 +68,4 @@ class ToggleFavoriteAlbumViewSet(ModelViewSet):
         else:
             user_favs.albums.remove(album)
         user_favs.save()
-        return Response({'message':'success'})
+        return Response({'message': 'success'})

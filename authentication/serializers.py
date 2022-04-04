@@ -5,11 +5,16 @@ from .models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'password', 'date_joined', 'avatar']
+        fields = ['id', 'email', 'username', 'password', 'date_joined',
+                  'avatar']
         extra_kwargs = {
-            'email': {'error_messages': {'required': 'Email must not be empty', 'blank': 'Email must not be empty'}},
-            'username': {'error_messages': {'required': 'Username must not be empty', 'blank': 'Username must not be empty'}},
-            'password': {'write_only': True, 'error_messages': {'required': 'Password must not be empty', 'blank': 'Password must not be empty'}}
+            'email': {'error_messages': {'required': 'Email must not be empty',
+                                         'blank': 'Email must not be empty'}},
+            'username': {'error_messages': {'required': 'Username must not\
+                            be empty', 'blank': 'Username must not be empty'}},
+            'password': {'write_only': True, 'error_messages':
+                         {'required': 'Password must not be empty',
+                          'blank': 'Password must not be empty'}}
         }
 
     def create(self, validated_data):

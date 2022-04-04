@@ -4,7 +4,8 @@ from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.conf import settings
 import jwt
-from rest_framework.exceptions import AuthenticationFailed, NotFound, ParseError
+from rest_framework.exceptions import AuthenticationFailed, NotFound, \
+    ParseError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import update_last_login
 from .models import CustomUser, UserFavorite
@@ -32,8 +33,11 @@ class RegisterAPIView(APIView):
 
         link = f'http://127.0.0.1:8000/api/auth/confirm-register/{token}'
 
-        send_mail('Активация аккаунта Musicality', f'Привет, {username}! Перейди по ссылке: {link} С уважением, команда Musicality',
-                  settings.EMAIL_HOST_USER, [request.data.get('email')], fail_silently=False)
+        send_mail('Активация аккаунта Musicality',
+                  f'Привет, {username}! Перейди по ссылке: {link} \
+                      С уважением, команда Musicality',
+                  settings.EMAIL_HOST_USER,
+                  [request.data.get('email')], fail_silently=False)
 
         return Response({'message': 'success'})
 
@@ -104,7 +108,7 @@ class UpdateUserAPIView(APIView):
         data = request.data
         if 'username' in data and len(data.get('username')) > 0:
             try:
-                candidate = CustomUser.objects.get(
+                CustomUser.objects.get(
                     username=data.get('username'))
                 raise ParseError(detail='Username already taken')
             except CustomUser.DoesNotExist:

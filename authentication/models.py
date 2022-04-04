@@ -44,22 +44,27 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser):
-    email = models.EmailField(verbose_name='Email', max_length=60, unique=True)
-    username = models.CharField(verbose_name='Имя пользователя', max_length=30, unique=True)
-    date_joined = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='Последний вход', auto_now=True)
-    avatar = models.ImageField(upload_to='images/users_avatars/', verbose_name='Аваратка', blank=True)
+    email = models.EmailField(verbose_name='Email', max_length=60,
+                              unique=True)
+    username = models.CharField(verbose_name='Имя пользователя',
+                                max_length=30, unique=True)
+    date_joined = models.DateTimeField(verbose_name='Дата создания',
+                                       auto_now_add=True)
+    last_login = models.DateTimeField(verbose_name='Последний вход',
+                                      auto_now=True)
+    avatar = models.ImageField(upload_to='images/users_avatars/',
+                               verbose_name='Аваратка', blank=True)
     token = models.TextField(verbose_name='Register token')
 
     def get_image(self):
         if self.avatar:
-            return mark_safe(f'<img src="{self.avatar.url}" height="100" width="100"/>')
+            return mark_safe(f'<img src="{self.avatar.url}" height="100" \
+                width="100"/>')
         else:
             return '(Нет изображения)'
 
     get_image.short_description = 'Аватар'
     get_image.allow_tags = True
-
 
     is_active = models.BooleanField(verbose_name='Активирован', default=False)
     is_admin = models.BooleanField(default=False, verbose_name='Администратор')
@@ -90,12 +95,12 @@ class UserFavorite(models.Model):
     tracks = models.ManyToManyField(Track, related_name='favorite_tracks')
     albums = models.ManyToManyField(Album, related_name='favorite_albums')
     artists = models.ManyToManyField(Artist, related_name='favorite_artists')
-    playlists = models.ManyToManyField(Playlist, related_name='favorite_playlists')
+    playlists = models.ManyToManyField(Playlist,
+                                       related_name='favorite_playlists')
     genres = models.ManyToManyField(Genre, related_name='favorite_genres')
 
     def __str__(self):
         return f"{self.user.username}'s Favorites"
-
 
     class Meta:
         verbose_name = 'Избранное'

@@ -6,6 +6,7 @@ from authentication.models import UserFavorite
 from .models import Artist
 from .serializers import ArtistSerializer
 
+
 class ArtistViewSet(ModelViewSet):
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer
@@ -24,7 +25,6 @@ class ArtistViewSet(ModelViewSet):
             raise NotFound(detail='Artist was not found')
 
 
-
 class ToggleFavoriteArtistViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserFavorite.objects.all()
@@ -34,7 +34,8 @@ class ToggleFavoriteArtistViewSet(ModelViewSet):
     def list(self, request):
         user = request.user
         user_favs = UserFavorite.objects.get(user=user)
-        data = self.serializer_class(user_favs.artists.all(), many=True).data
+        data = self.serializer_class(user_favs.artists.all(),
+                                     many=True).data
         return Response(data)
 
     def retrieve(self, request, pk=None):
@@ -51,7 +52,8 @@ class ToggleFavoriteArtistViewSet(ModelViewSet):
 
     def create(self, request):
         user = request.user
-        if 'artistId' not in request.data or len(request.data.get('artistId')) < 1:
+        if 'artistId' not in request.data or \
+                len(request.data.get('artistId')) < 1:
             raise ParseError(detail='artistId must not be empty')
 
         pk = int(request.data.get('artistId'))
@@ -67,4 +69,4 @@ class ToggleFavoriteArtistViewSet(ModelViewSet):
         else:
             user_favs.artists.remove(artist)
         user_favs.save()
-        return Response({'message':'success'})
+        return Response({'message': 'success'})

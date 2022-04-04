@@ -6,6 +6,7 @@ from authentication.models import UserFavorite
 from .models import Track
 from .serializers import TrackSerializer
 
+
 class TrackViewSet(ModelViewSet):
     queryset = Track.objects.all()
     serializer_class = TrackSerializer
@@ -50,7 +51,8 @@ class ToggleFavoriteTrackViewSet(ModelViewSet):
 
     def create(self, request):
         user = request.user
-        if 'trackId' not in request.data or len(request.data.get('trackId')) < 1:
+        if 'trackId' not in request.data or \
+                len(request.data.get('trackId')) < 1:
             raise ParseError(detail='trackId must not be empty')
 
         pk = int(request.data.get('trackId'))
@@ -65,5 +67,6 @@ class ToggleFavoriteTrackViewSet(ModelViewSet):
             user_favs.Tracks.add(track)
         else:
             user_favs.tracks.remove(track)
+
         user_favs.save()
-        return Response({'message':'success'})
+        return Response({'message': 'success'})

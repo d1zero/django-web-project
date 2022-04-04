@@ -6,6 +6,7 @@ from authentication.models import UserFavorite
 from .models import Playlist
 from .serializers import PlaylistSerializer
 
+
 class PlaylistViewSet(ModelViewSet):
     queryset = Playlist.objects.filter(is_visible=True, track__isnull=False)
     serializer_class = PlaylistSerializer
@@ -50,7 +51,8 @@ class ToggleFavoritePlaylistViewSet(ModelViewSet):
 
     def create(self, request):
         user = request.user
-        if 'playlistId' not in request.data or len(request.data.get('playlistId')) < 1:
+        if 'playlistId' not in request.data or \
+                len(request.data.get('playlistId')) < 1:
             raise ParseError(detail='playlistId must not be empty')
 
         pk = int(request.data.get('playlistId'))
@@ -66,4 +68,4 @@ class ToggleFavoritePlaylistViewSet(ModelViewSet):
         else:
             user_favs.playlists.remove(playlist)
         user_favs.save()
-        return Response({'message':'success'})
+        return Response({'message': 'success'})
