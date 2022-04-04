@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
-    'management',
+    'drf_yasg',
 
     'authentication',
     'tracks',
@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'albums',
     'genres',
     'playlists',
+
+    'management',
 ]
 
 MIDDLEWARE = [
