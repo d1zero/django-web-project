@@ -61,4 +61,4 @@ jobs:
 
       run: |
         ls
-        coverage run .\manage.py test && coverage report
+        coverage run manage.py test && coverage report
