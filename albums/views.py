@@ -22,7 +22,7 @@ class AlbumViewSet(ModelViewSet):
             data = self.serializer_class(self.queryset.get(pk=pk)).data
             return Response(data)
         except Album.DoesNotExist:
-            raise NotFound(detail='Album was not found')
+            raise NotFound({'message': 'Album was not found'})
 
 
 class ToggleFavoriteAlbumViewSet(ModelViewSet):
@@ -47,13 +47,13 @@ class ToggleFavoriteAlbumViewSet(ModelViewSet):
         except self.model.DoesNotExist:
             liked = False
 
-        return Response({'detail': liked})
+        return Response({'message': liked})
 
     def create(self, request):
         user = request.user
         if 'albumId' not in request.data or \
                 len(request.data.get('albumId')) < 1:
-            raise ParseError(detail='albumId must not be empty')
+            raise ParseError({'message': 'albumId must not be empty'})
 
         pk = int(request.data.get('albumId'))
         user_favs = UserFavorite.objects.get(user=user)
@@ -61,9 +61,9 @@ class ToggleFavoriteAlbumViewSet(ModelViewSet):
         try:
             album = self.model.objects.get(pk=pk)
         except self.model.DoesNotExist:
-            raise NotFound(detail='Album was not found')
+            raise NotFound({'message': 'Album was not found'})
 
-        if Album not in user_favs.albums.all():
+        if album not in user_favs.albums.all():
             user_favs.albums.add(album)
         else:
             user_favs.albums.remove(album)

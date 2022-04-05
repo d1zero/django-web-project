@@ -1,0 +1,14 @@
+[run]
+ branch = True
+ source = .
+ omit =
+  */migrations/*
+  */urls.py
+  manage.py
+  */asgi.py
+  */wsgi.py
+  management/*
+  */tests/*
+  */tasks.py
+  authentication/serializers.py
+  authentication/models.py

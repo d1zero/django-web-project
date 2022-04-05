@@ -14,15 +14,15 @@ from .views import schema_view
 
 router = routers.SimpleRouter()
 router.register('auth', UserViewSet)
-router.register('albums/toggle-favorite', ToggleFavoriteAlbumViewSet)
+router.register('albums/toggle-favorite', ToggleFavoriteAlbumViewSet, basename='albums-userfavorite')
 router.register('albums', AlbumViewSet)
-router.register('artists/toggle-favorite', ToggleFavoriteArtistViewSet)
+router.register('artists/toggle-favorite', ToggleFavoriteArtistViewSet, basename='artists-userfavorite')
 router.register('artists', ArtistViewSet)
-router.register('genres/toggle-favorite', ToggleFavoriteGenreViewSet)
+router.register('genres/toggle-favorite', ToggleFavoriteGenreViewSet, basename='genres-userfavorite')
 router.register('genres', GenreViewSet)
-router.register('playlists/toggle-favorite', ToggleFavoritePlaylistViewSet)
+router.register('playlists/toggle-favorite', ToggleFavoritePlaylistViewSet, basename='playlists-userfavorite')
 router.register('playlists', PlaylistViewSet)
-router.register('tracks/toggle-favorite', ToggleFavoriteTrackViewSet)
+router.register('tracks/toggle-favorite', ToggleFavoriteTrackViewSet, basename='tracks-userfavorite')
 router.register('tracks', TrackViewSet)
 
 urlpatterns = [

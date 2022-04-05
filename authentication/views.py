@@ -4,7 +4,7 @@ from django.utils.crypto import get_random_string
 # from django.core.mail import send_mail
 from django.conf import settings
 import jwt
-from rest_framework.exceptions import AuthenticationFailed, ParseError
+from rest_framework.exceptions import AuthenticationFailed, ParseError,ValidationError, NotFound
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import update_last_login
 from .models import CustomUser, UserFavorite
@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework_simplejwt.exceptions import TokenError
 
 
 class UserViewSet(ModelViewSet):
@@ -23,6 +24,11 @@ class UserViewSet(ModelViewSet):
     def register(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        password = serializer.validated_data['password']
+        if len(password) < 8:
+            raise ValidationError({'password': ['Password is too short']})
+
         serializer.save()
 
         username = request.data.get('username')
@@ -49,32 +55,44 @@ class UserViewSet(ModelViewSet):
 
     @action(methods=['POST'], detail=False)
     def login(self, request):
+        if 'email' not in request.data:
+            data = {'email': ['Email must be provided']}
+            if 'password' not in request.data:
+                data['password'] = ['Password must be provided']
+            raise ValidationError(data)
+        if 'password' not in request.data:
+            raise ValidationError({'password': ['Password must be provided']})
+
         try:
             user = CustomUser.objects.get(email=request.data.get('email'))
         except CustomUser.DoesNotExist:
-            raise AuthenticationFailed('User does not exists')
+            raise NotFound({'message': 'User with provided credentials does not exist'})
 
         if not user.is_active:
-            raise AuthenticationFailed('Email is not confirmed')
+            raise AuthenticationFailed({'message': 'Email is not confirmed'})
 
         if not user.check_password(request.data.get('password')):
-            raise AuthenticationFailed('Incorrect password')
+            raise AuthenticationFailed({'message': 'Incorrect password'})
 
         refresh = RefreshToken.for_user(user)
         update_last_login(None, user)
         response = Response()
         response.set_cookie('refresh', str(refresh))
-        response.data = {'access': str(refresh.access_token), }
+        response.data = {'access': str(refresh.access_token)}
         return response
 
-    @action(methods=['POST'], detail=False)
+    @action(methods=['POST'], detail=False,
+            permission_classes=[IsAuthenticated])
     def logout(self, request):
         response = Response()
-        if 'refresh' not in request.COOKIES:
-            raise AuthenticationFailed(detail='Unauthenticated')
+        if 'refresh' not in request.COOKIES or len(request.COOKIES['refresh']) < 1:
+            raise AuthenticationFailed({'message': 'Unauthenticated'})
         token = request.COOKIES.get('refresh')
-        token = RefreshToken(token)
-        token.blacklist()
+        try:
+            token = RefreshToken(token)
+            token.blacklist()
+        except TokenError:
+            raise AuthenticationFailed({'message': 'Cookie is not valid'})
 
         response.delete_cookie('refresh')
         response.data = {'message': 'success'}

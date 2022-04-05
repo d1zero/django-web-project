@@ -5,7 +5,6 @@ from albums.models import Album
 from artists.models import Artist
 from genres.models import Genre
 from playlists.models import Playlist
-
 from tracks.models import Track
 
 
@@ -58,8 +57,9 @@ class CustomUser(AbstractBaseUser):
 
     def get_image(self):
         if self.avatar:
-            return mark_safe(f'<img src="{self.avatar.url}" height="100" \
-                width="100"/>')
+            return mark_safe(
+                f'<img src="{self.avatar.url}" height="100" width="100"/>'
+            )
         else:
             return '(Нет изображения)'
 

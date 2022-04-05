@@ -7,12 +7,13 @@ class TestSetUp(APITestCase):
     def setUp(self) -> None:
         self.login_url = reverse('customuser-login')
         self.register_url = reverse('customuser-register')
+        self.logout_url = reverse('customuser-logout')
         self.faker = Faker()
 
         self.user_data = {
             'email': self.faker.email(),
             'username': self.faker.simple_profile()['username'],
-            'password': self.faker.password(),
+            'password': self.faker.password(length=8),
         }
 
         return super().setUp()

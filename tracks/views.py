@@ -22,7 +22,7 @@ class TrackViewSet(ModelViewSet):
             data = self.serializer_class(self.queryset.get(pk=pk)).data
             return Response(data)
         except Track.DoesNotExist:
-            raise NotFound(detail='Track was not found')
+            raise NotFound({'message': 'Track was not found'})
 
 
 class ToggleFavoriteTrackViewSet(ModelViewSet):
@@ -47,13 +47,13 @@ class ToggleFavoriteTrackViewSet(ModelViewSet):
         except self.model.DoesNotExist:
             liked = False
 
-        return Response({'detail': liked})
+        return Response({'message': liked})
 
     def create(self, request):
         user = request.user
         if 'trackId' not in request.data or \
                 len(request.data.get('trackId')) < 1:
-            raise ParseError(detail='trackId must not be empty')
+            raise ParseError({'message': 'trackId must not be empty'})
 
         pk = int(request.data.get('trackId'))
         user_favs = UserFavorite.objects.get(user=user)
@@ -61,10 +61,10 @@ class ToggleFavoriteTrackViewSet(ModelViewSet):
         try:
             track = self.model.objects.get(pk=pk)
         except self.model.DoesNotExist:
-            raise NotFound(detail='track was not found')
+            raise NotFound({'message': 'Track was not found'})
 
-        if track not in user_favs.Tracks.all():
-            user_favs.Tracks.add(track)
+        if track not in user_favs.tracks.all():
+            user_favs.tracks.add(track)
         else:
             user_favs.tracks.remove(track)
 

@@ -22,7 +22,7 @@ class PlaylistViewSet(ModelViewSet):
             data = self.serializer_class(self.queryset.get(pk=pk)).data
             return Response(data)
         except Playlist.DoesNotExist:
-            raise NotFound(detail='Playlist was not found')
+            raise NotFound({'message': 'Playlist was not found'})
 
 
 class ToggleFavoritePlaylistViewSet(ModelViewSet):
@@ -47,13 +47,13 @@ class ToggleFavoritePlaylistViewSet(ModelViewSet):
         except self.model.DoesNotExist:
             liked = False
 
-        return Response({'detail': liked})
+        return Response({'message': liked})
 
     def create(self, request):
         user = request.user
         if 'playlistId' not in request.data or \
                 len(request.data.get('playlistId')) < 1:
-            raise ParseError(detail='playlistId must not be empty')
+            raise ParseError({'message': 'playlistId must not be empty'})
 
         pk = int(request.data.get('playlistId'))
         user_favs = UserFavorite.objects.get(user=user)
@@ -61,7 +61,7 @@ class ToggleFavoritePlaylistViewSet(ModelViewSet):
         try:
             playlist = self.model.objects.get(pk=pk)
         except self.model.DoesNotExist:
-            raise NotFound(detail='Playlist was not found')
+            raise NotFound({'message': 'Playlist was not found'})
 
         if playlist not in user_favs.playlists.all():
             user_favs.playlists.add(playlist)

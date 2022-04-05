@@ -6,3 +6,4 @@ media
 static
 celerybeat*.*
 .coverage
+htmlcov

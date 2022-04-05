@@ -22,7 +22,7 @@ class ArtistViewSet(ModelViewSet):
             data = self.serializer_class(self.queryset.get(pk=pk)).data
             return Response(data)
         except Artist.DoesNotExist:
-            raise NotFound(detail='Artist was not found')
+            raise NotFound({'message': 'Artist was not found'})
 
 
 class ToggleFavoriteArtistViewSet(ModelViewSet):
@@ -48,13 +48,13 @@ class ToggleFavoriteArtistViewSet(ModelViewSet):
         except self.model.DoesNotExist:
             liked = False
 
-        return Response({'detail': liked})
+        return Response({'message': liked})
 
     def create(self, request):
         user = request.user
         if 'artistId' not in request.data or \
                 len(request.data.get('artistId')) < 1:
-            raise ParseError(detail='artistId must not be empty')
+            raise ParseError({'message': 'artistId must not be empty'})
 
         pk = int(request.data.get('artistId'))
         user_favs = UserFavorite.objects.get(user=user)
@@ -62,7 +62,7 @@ class ToggleFavoriteArtistViewSet(ModelViewSet):
         try:
             artist = self.model.objects.get(pk=pk)
         except self.model.DoesNotExist:
-            raise NotFound(detail='Artist was not found')
+            raise NotFound({'message': 'Artist was not found'})
 
         if artist not in user_favs.artists.all():
             user_favs.artists.add(artist)

@@ -22,7 +22,7 @@ class GenreViewSet(ModelViewSet):
             data = self.serializer_class(self.queryset.get(pk=pk)).data
             return Response(data)
         except Genre.DoesNotExist:
-            raise NotFound(detail='Genre was not found')
+            raise NotFound({'message': 'Genre was not found'})
 
 
 class ToggleFavoriteGenreViewSet(ModelViewSet):
@@ -47,13 +47,13 @@ class ToggleFavoriteGenreViewSet(ModelViewSet):
         except self.model.DoesNotExist:
             liked = False
 
-        return Response({'detail': liked})
+        return Response({'message': liked})
 
     def create(self, request):
         user = request.user
         if 'genreId' not in request.data or \
                 len(request.data.get('genreId')) < 1:
-            raise ParseError(detail='genreId must not be empty')
+            raise ParseError({'message': 'genreId must not be empty'})
 
         pk = int(request.data.get('genreId'))
         user_favs = UserFavorite.objects.get(user=user)
@@ -61,7 +61,7 @@ class ToggleFavoriteGenreViewSet(ModelViewSet):
         try:
             genre = self.model.objects.get(pk=pk)
         except self.model.DoesNotExist:
-            raise NotFound(detail='Genre was not found')
+            raise NotFound({'message': 'Genre was not found'})
 
         if genre not in user_favs.genres.all():
             user_favs.genres.add(genre)
