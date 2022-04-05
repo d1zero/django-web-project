@@ -1,3 +1,4 @@
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.utils.crypto import get_random_string
 # from django.core.mail import send_mail
@@ -99,9 +100,16 @@ class UserViewSet(ModelViewSet):
 
         return Response()
 
-    # TODO: Does not work
-    @action(methods=['PATCH'], detail=False, url_path='confirm/<str:token>')
-    def confirm_register(self, _, token):
+    @action(methods=['GET'], detail=False,
+            permission_classes=[IsAuthenticated])
+    def user(self, request):
+        user = request.user
+        data = UserSerializer(user).data
+        return Response(data)
+
+
+class ConfirmUserAPIView(APIView):
+    def patch(self, _, token):
         try:
             payload = jwt.decode(
                 token, settings.SECRET_KEY, algorithms=['HS256'])
@@ -115,10 +123,3 @@ class UserViewSet(ModelViewSet):
         favs = UserFavorite.objects.create(user=user)
         favs.save()
         return Response({'message': 'success'})
-
-    @action(methods=['GET'], detail=False,
-            permission_classes=[IsAuthenticated])
-    def user(self, request):
-        user = request.user
-        data = UserSerializer(user).data
-        return Response(data)
