@@ -140,7 +140,7 @@ class TestLogoutView(TestSetUp):
         self.assertEqual(logout_res.data['message'], 'Unauthenticated')
         self.assertEqual(logout_res.status_code, 401)
 
-    def test_user_cannout_logout_cookie_not_valid(self):
+    def test_user_cannot_logout_cookie_not_valid(self):
         self.client.post(self.register_url, self.user_data, format="json")
 
         user = CustomUser.objects.get(email=self.user_data['email'])
@@ -166,3 +166,111 @@ class TestLogoutView(TestSetUp):
         logout_res = self.client.post(self.logout_url)
         self.assertEqual(logout_res.data['message'], 'success')
         self.assertEqual(logout_res.status_code, 200)
+
+
+class TestUserView(TestSetUp):
+    def test_user_cannot_get_user_data_without_bearer(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        user_res = self.client.get(self.user_url)
+        self.assertEqual(user_res.status_code, 401)
+
+    def test_get_user_data(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        login_res = self.client.post(self.login_url, self.user_data, format="json")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_res.data['access'])
+        user_res = self.client.get(self.user_url)
+        self.assertEqual(user_res.data['id'], user.id)
+        self.assertEqual(user_res.data['email'], user.email)
+        self.assertEqual(user_res.data['username'], user.username)
+        self.assertEqual(user_res.status_code, 200)
+
+
+class TestUserConfirmAPIView(TestSetUp):
+    def test_user_confirm_with_bad_token(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+
+        res = self.client.patch(self.confirm_url + user.token + 'a')
+        self.assertEqual(res.data['message'], 'Codes are different')
+        self.assertEqual(res.status_code, 401)
+
+    def test_user_confirm(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+
+        res = self.client.patch(self.confirm_url + user.token)
+        self.assertEqual(res.data['message'], 'success')
+        self.assertEqual(res.status_code, 200)
+
+
+class TestUserUpdate(TestSetUp):
+    def test_user_cannot_update_data_without_bearer(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        res = self.client.patch(self.update_url)
+        self.assertEqual(res.status_code, 401)
+
+    def test_user_cannot_update_data_without_data(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        login_res = self.client.post(self.login_url, self.user_data, format="json")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_res.data['access'])
+        res = self.client.patch(self.update_url)
+        self.assertEqual(res.status_code, 200)
+
+    def test_user_cannot_update_data_with_empty_username(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        login_res = self.client.post(self.login_url, self.user_data, format="json")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_res.data['access'])
+        res = self.client.patch(self.update_url, {'username': ''}, format="json")
+        self.assertEqual(res.status_code, 200)
+
+    def test_user_cannot_update_data_with_used_username(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        login_res = self.client.post(self.login_url, self.user_data, format="json")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_res.data['access'])
+        res = self.client.patch(self.update_url, {'username': user.username}, format="json")
+        self.assertEqual(res.data['message'], 'Username already taken')
+        self.assertEqual(res.status_code, 400)
+
+    def test_user_can_update_data_with_new_username(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
+        user = CustomUser.objects.get(email=self.user_data['email'])
+        user.is_active = True
+        user.save()
+
+        login_res = self.client.post(self.login_url, self.user_data, format="json")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_res.data['access'])
+        res = self.client.patch(self.update_url, data={'username': self.faker.pystr()}, format="json")
+        self.assertEqual(res.status_code, 200)

@@ -1,7 +1,6 @@
 from faker import Faker
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from random import choice
 
 
 class TestSetUp(APITestCase):

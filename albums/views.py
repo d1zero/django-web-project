@@ -2,9 +2,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.permissions import IsAuthenticated
+import django_filters.rest_framework
 from authentication.models import UserFavorite
 from .models import Album
 from .serializers import AlbumSerializer
+from rest_framework import generics
 
 
 class AlbumViewSet(ModelViewSet):
@@ -69,3 +71,10 @@ class ToggleFavoriteAlbumViewSet(ModelViewSet):
             user_favs.albums.remove(album)
         user_favs.save()
         return Response({'message': 'success'})
+
+
+class GetLatestTwoYearsAlbumsAPIView(generics.ListAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ['name', 'date_of_release']

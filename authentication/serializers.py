@@ -16,9 +16,10 @@ class UserSerializer(serializers.ModelSerializer):
                       },
             'username': {'error_messages': {'required': 'Username must not be empty',
                                             'blank': 'Username must not be empty'},
-                         'validators': [
-                          UniqueValidator(queryset=CustomUser.objects.all(), message='User with this username already exists')]
-                       },
+                         'validators': [UniqueValidator(queryset=CustomUser.objects.all(),
+                                                        message='User with this username already exists')
+                                        ]
+                         },
             'password': {'write_only': True, 'error_messages':
                          {'required': 'Password must not be empty',
                           'blank': 'Password must not be empty'}}

@@ -1,6 +1,8 @@
 from datetime import timedelta
 from pathlib import Path
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env(DEBUG=(bool, False))
 
@@ -26,6 +28,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'simple_history',
+    'django_filters',
 
     'authentication',
     'tracks',
@@ -46,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -154,3 +159,17 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Europe/Moscow"
+
+# sentry_sdk.init(
+#     dsn=env('SENTRY_DSN'),
+#     integrations=[DjangoIntegration()],
+
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     # We recommend adjusting this value in production.
+#     traces_sample_rate=1.0,
+
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True
+# )

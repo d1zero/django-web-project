@@ -4,6 +4,7 @@ from authentication.models import CustomUser, UserFavorite
 from tracks.models import Track
 from faker import Faker
 
+
 class TestPlaylistViewSet(TestSetUp):
     def test_get_list_of_playlists(self):
         res = self.client.get(self.list_url)
@@ -222,7 +223,6 @@ class TestToggleFavoritePlaylistViewSet(TestSetUp):
         favs.playlists.add(Playlist.objects.get(id=playlist.id))
         favs.save()
         self.change_fav_id(playlist.id)
-
 
         res = self.client.get(self.favorite_detail_url)
         self.assertEqual(res.status_code, 200)

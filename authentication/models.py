@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from simple_history.models import HistoricalRecords
 from django.utils.html import mark_safe
 from albums.models import Album
 from artists.models import Artist
@@ -75,6 +76,7 @@ class CustomUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['username', ]
 
     objects = CustomUserManager()
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.email

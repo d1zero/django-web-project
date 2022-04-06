@@ -12,4 +12,3 @@ class PlaylistTestSetUp(TestCase):
             'photo': cls.faker.pystr(max_chars=10),
             'is_visible': cls.faker.pybool(),
         }
-

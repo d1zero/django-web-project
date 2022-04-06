@@ -2,6 +2,7 @@ from .test_views_setup import TestSetUp
 from ..models import Album
 from authentication.models import CustomUser, UserFavorite
 
+
 class TestAlbumViewSet(TestSetUp):
     def test_get_list_of_albums(self):
         res = self.client.get(self.list_url)
@@ -219,7 +220,6 @@ class TestToggleFavoriteAlbumViewSet(TestSetUp):
         favs.albums.add(Album.objects.get(id=album.id))
         favs.save()
         self.change_fav_id(album.id)
-
 
         res = self.client.get(self.favorite_detail_url)
         self.assertEqual(res.status_code, 200)

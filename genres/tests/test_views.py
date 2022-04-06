@@ -2,6 +2,7 @@ from .test_views_setup import TestSetUp
 from ..models import Genre
 from authentication.models import CustomUser, UserFavorite
 
+
 class TestGenreViewSet(TestSetUp):
     def test_get_list_of_genres(self):
         res = self.client.get(self.list_url)
@@ -203,7 +204,6 @@ class TestToggleFavoriteGenreViewSet(TestSetUp):
         favs.genres.add(Genre.objects.get(id=genre.id))
         favs.save()
         self.change_fav_id(genre.id)
-
 
         res = self.client.get(self.favorite_detail_url)
         self.assertEqual(res.status_code, 200)

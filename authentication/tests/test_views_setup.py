@@ -8,6 +8,9 @@ class TestSetUp(APITestCase):
         self.login_url = reverse('customuser-login')
         self.register_url = reverse('customuser-register')
         self.logout_url = reverse('customuser-logout')
+        self.user_url = reverse('customuser-user')
+        self.confirm_url = '/api/auth/confirm-register/'
+        self.update_url = reverse('customuser-user-update')
         self.faker = Faker()
 
         self.user_data = {

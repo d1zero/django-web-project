@@ -1,7 +1,6 @@
 from faker import Faker
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from random import choice
 
 
 class TestSetUp(APITestCase):
@@ -22,7 +21,7 @@ class TestSetUp(APITestCase):
             'name': self.faker.pystr(max_chars=10),
             'description': self.faker.pystr(max_chars=10),
             'photo': self.faker.pystr(max_chars=10),
-            'is_visible':  True,
+            'is_visible': True,
         }
 
         self.user_data = {

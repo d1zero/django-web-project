@@ -2,6 +2,7 @@ from .test_views_setup import TestSetUp
 from ..models import Track
 from authentication.models import CustomUser, UserFavorite
 
+
 class TestTrackViewSet(TestSetUp):
     def test_get_list_of_tracks(self):
         res = self.client.get(self.list_url)
@@ -219,7 +220,6 @@ class TestToggleFavoriteTrackViewSet(TestSetUp):
         favs.tracks.add(Track.objects.get(id=track.id))
         favs.save()
         self.change_fav_id(track.id)
-
 
         res = self.client.get(self.favorite_detail_url)
         self.assertEqual(res.status_code, 200)

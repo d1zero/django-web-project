@@ -1,6 +1,7 @@
 from django.test import TestCase
 from faker import Faker
 
+
 class GenreTestSetUp(TestCase):
     @classmethod
     def setUpTestData(cls):

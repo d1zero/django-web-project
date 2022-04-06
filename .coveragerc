@@ -10,5 +10,3 @@
   management/*
   */tests/*
   */tasks.py
-  authentication/serializers.py
-  authentication/models.py
