@@ -34,6 +34,8 @@ colorama==0.4.4; python_version >= "3.7" and python_full_version < "3.0.0" and p
 deprecated==1.2.13; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6" \
     --hash=sha256:64756e3e14c8c5eea9795d93c524551432a0be75629f8f29e67ab8caf076c76d \
     --hash=sha256:43ac5335da90c31c24ba028af536a91d41d53f9e6901ddb021bcc572ce44e38d
+django-admin-volt==0.0.5 \
+    --hash=sha256:051f8412ffe920f5bd7db9879860c51089bc46367d94803312334485d43a5da6
 django-cors-headers==3.11.0; python_version >= "3.7" \
     --hash=sha256:eb98389bf7a2afc5d374806af4a9149697e3a6955b5a2dc2bf049f7d33647456 \
     --hash=sha256:a22be2befd4069c4fc174f11cf067351df5c061a3a5f94a01650b4e928b0372b
