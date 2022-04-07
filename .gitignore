@@ -7,3 +7,4 @@ static
 celerybeat*.*
 .coverage
 htmlcov
+cobertura.xml
