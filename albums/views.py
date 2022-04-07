@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.permissions import IsAuthenticated
@@ -74,7 +75,7 @@ class ToggleFavoriteAlbumViewSet(ModelViewSet):
 
 
 class GetLatestTwoYearsAlbumsAPIView(generics.ListAPIView):
-    queryset = Album.objects.all()
+    queryset = Album.objects.filter(Q(date_of_release__year=2022) | Q(date_of_release__year=2021))
     serializer_class = AlbumSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_fields = ['name', 'date_of_release']
