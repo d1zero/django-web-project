@@ -61,7 +61,10 @@ jobs:
 
       run: |
         coverage run manage.py test && coverage report && coverage xml
+        export CODACY_USERNAME=d1zero
         export CODACY_PROJECT_TOKEN=${{secrets.CODACY_API}}
+        export CODACY_ORGANIZATION_PROVIDER=gh
+        export CODACY_PROJECT_NAME=django-web-project
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r cobertura.xml
 # coverage run manage.py test && coverage report --fail-under=95 && coverage xml
 
