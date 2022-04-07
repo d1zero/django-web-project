@@ -60,7 +60,9 @@ jobs:
         REDIS_PORT: ${{ secrets.REDIS_PORT }}
 
       run: |
-        coverage run manage.py test && coverage report && coverage xml
+        coverage run manage.py test && coverage report && coverage xml -o cobertura.xml
+        export CODACY_PROJECT_TOKEN=${{secrets.CODACY_TOKEN}}
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r cobertura.xml
 # coverage run manage.py test && coverage report --fail-under=95 && coverage xml
 
     - name: Report coverage to codecov
@@ -80,6 +82,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage.xml
+        files: ./cobertura.xml
         directory: ./coverage/reports/
         fail_ci_if_error: true
