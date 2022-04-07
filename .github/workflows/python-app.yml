@@ -60,7 +60,7 @@ jobs:
         REDIS_PORT: ${{ secrets.REDIS_PORT }}
 
       run: |
-        coverage run manage.py test && coverage report && coverage xml
+        coverage run manage.py test && coverage report && coverage xml -o cobertura.xml
         export CODACY_USERNAME=d1zero
         export CODACY_PROJECT_TOKEN=${{secrets.CODACY_API}}
         export CODACY_ORGANIZATION_PROVIDER=gh
