@@ -61,27 +61,17 @@ jobs:
 
       run: |
         coverage run manage.py test && coverage report && coverage xml -o cobertura.xml
-        export CODACY_PROJECT_TOKEN=${{secrets.CODACY_TOKEN}}
-        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r cobertura.xml
 # coverage run manage.py test && coverage report --fail-under=95 && coverage xml
 
     - name: Report coverage to codecov
-      env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        DEBUG: ${{ secrets.DEBUG }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        EMAIL_USER: ${{ secrets.EMAIL_USER }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        REDIS_HOST: ${{ secrets.REDIS_HOST }}
-        REDIS_PORT: ${{ secrets.REDIS_PORT }}
-
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./cobertura.xml
         directory: ./coverage/reports/
         fail_ci_if_error: true
+
+    - name: Send report to Codacy
+      run: |
+        export CODACY_PROJECT_TOKEN=${{secrets.CODACY_TOKEN}}
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r cobertura.xml
