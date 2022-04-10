@@ -1,4 +1,5 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,7 @@ from .models import Genre
 from .serializers import GenreSerializer
 
 
-class GenreViewSet(ModelViewSet):
+class GenreViewSet(ReadOnlyModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
@@ -25,7 +26,7 @@ class GenreViewSet(ModelViewSet):
             raise NotFound({'message': 'Genre was not found'})
 
 
-class ToggleFavoriteGenreViewSet(ModelViewSet):
+class ToggleFavoriteGenreViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserFavorite.objects.all()
     serializer_class = GenreSerializer

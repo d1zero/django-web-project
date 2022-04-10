@@ -14,6 +14,7 @@ from rest_framework.status import HTTP_201_CREATED
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework_simplejwt.exceptions import TokenError
+from drf_yasg.utils import swagger_auto_schema
 
 
 class UserViewSet(ModelViewSet):

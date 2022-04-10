@@ -1,4 +1,5 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,7 @@ from .models import Playlist
 from .serializers import PlaylistSerializer
 
 
-class PlaylistViewSet(ModelViewSet):
+class PlaylistViewSet(ReadOnlyModelViewSet):
     queryset = Playlist.objects.filter(is_visible=True, track__isnull=False)
     serializer_class = PlaylistSerializer
 
@@ -25,7 +26,7 @@ class PlaylistViewSet(ModelViewSet):
             raise NotFound({'message': 'Playlist was not found'})
 
 
-class ToggleFavoritePlaylistViewSet(ModelViewSet):
+class ToggleFavoritePlaylistViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserFavorite.objects.all()
     serializer_class = PlaylistSerializer

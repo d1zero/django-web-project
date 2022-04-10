@@ -11,10 +11,10 @@ admin.site.register(UserFavorite)
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin):
     list_display = ('email', 'username', 'get_image', 'date_joined',
-                    'last_login', 'is_active', 'is_admin')
+                    'last_login', 'is_active', 'is_admin',)
     search_fields = ('email', 'username',)
     readonly_fields = ('date_joined', 'last_login', 'get_image',)
-    exclude = ('password', 'token', 'avatar')
+    exclude = ('password', 'token')
     history_list_display = ["status"]
 
     filter_horizontal = ()

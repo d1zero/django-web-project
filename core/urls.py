@@ -1,4 +1,4 @@
-from django.contrib import admin
+from baton.autodiscover import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -32,6 +32,7 @@ router.register('tracks', TrackViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('baton/', include('baton.urls')),
     path('api/auth/', include('authentication.urls')),
     path('api/albums/latest/', GetLatestTwoYearsAlbumsAPIView.as_view()),
     path('api/', include(router.urls)),

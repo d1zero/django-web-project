@@ -1,4 +1,5 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ParseError
@@ -10,7 +11,7 @@ from .serializers import AlbumSerializer
 from rest_framework import generics
 
 
-class AlbumViewSet(ModelViewSet):
+class AlbumViewSet(ReadOnlyModelViewSet):
     queryset = Album.objects.all()
     serializer_class = AlbumSerializer
 
@@ -28,7 +29,7 @@ class AlbumViewSet(ModelViewSet):
             raise NotFound({'message': 'Album was not found'})
 
 
-class ToggleFavoriteAlbumViewSet(ModelViewSet):
+class ToggleFavoriteAlbumViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserFavorite.objects.all()
     serializer_class = AlbumSerializer

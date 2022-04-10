@@ -18,6 +18,7 @@ ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'playlists',
 
     'management',
+    'baton.autodiscover',
 ]
 
 MIDDLEWARE = [
@@ -173,3 +175,102 @@ CELERY_TIMEZONE = "Europe/Moscow"
 #     # django.contrib.auth) you may enable sending PII data.
 #     send_default_pii=True
 # )
+
+BATON = {
+    'SITE_HEADER': 'Musicality',
+    'SITE_TITLE': 'Musicality',
+    'INDEX_TITLE': 'Admin dashboard',
+    'SUPPORT_HREF': 'https://github.com/d1zero/django-web-project/issues',
+    'COPYRIGHT': 'copyright © 2022 <a href="https://github.com/d1zero" target="_blank">d1zero</a>',
+    'POWERED_BY': '<a href="https://github.com/d1zero" target="_blank">d1zero</a>',
+    'CONFIRM_UNSAVED_CHANGES': True,
+    'SHOW_MULTIPART_UPLOADING': True,
+    'ENABLE_IMAGES_PREVIEW': True,
+    'CHANGELIST_FILTERS_IN_MODAL': True,
+    'CHANGELIST_FILTERS_ALWAYS_OPEN': False,
+    'CHANGELIST_FILTERS_FORM': True,
+    'COLLAPSABLE_USER_AREA': False,
+    'MENU_ALWAYS_COLLAPSED': False,
+    'MENU_TITLE': 'Menu',
+    'MESSAGES_TOASTS': False,
+    'GRAVATAR_DEFAULT_IMG': 'retro',
+    'LOGIN_SPLASH': '/static/core/img/login-splash.png',
+    'MENU': (
+        {
+            'type': 'app',
+            'name': 'authentication',
+            'label': 'Authentication',
+            'icon': 'fa fa-user',
+            'models': (
+                {
+                    'name': 'customuser',
+                    'label': 'Users'
+                },
+                {
+                    'name': 'userfavorite',
+                    'label': "User's favorite"
+                },
+            )
+        },
+        {
+            'type': 'app',
+            'name': 'albums',
+            'label': 'Albums',
+            'icon': 'fa fa-circle',
+            'models': (
+                {
+                    'name': 'album',
+                    'label': 'Albums'
+                },
+            )
+        },
+        {
+            'type': 'app',
+            'name': 'artists',
+            'label': 'Artists',
+            'icon': 'fa fa-users',
+            'models': (
+                {
+                    'name': 'artist',
+                    'label': 'Artists'
+                },
+            )
+        },
+        {
+            'type': 'app',
+            'name': 'genres',
+            'label': 'Genres',
+            'icon': 'fa fa-circle',
+            'models': (
+                {
+                    'name': 'genre',
+                    'label': 'Genres'
+                },
+            )
+        },
+        {
+            'type': 'app',
+            'name': 'playlists',
+            'label': 'Playlists',
+            'icon': 'fa fa-list',
+            'models': (
+                {
+                    'name': 'playlist',
+                    'label': 'Playlists'
+                },
+            )
+        },
+        {
+            'type': 'app',
+            'name': 'tracks',
+            'label': 'Tracks',
+            'icon': 'fa fa-music',
+            'models': (
+                {
+                    'name': 'track',
+                    'label': 'Tracks'
+                },
+            )
+        },
+    ),
+}
