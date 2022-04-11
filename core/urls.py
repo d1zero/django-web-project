@@ -27,7 +27,7 @@ router.register('tracks', TrackViewSet)
 
 # from django.http import HttpResponse
 # def trigger_error(request):
-#     division_by_zero = 0 / 1
+#     division_by_zero = 1/0
 #     return HttpResponse('asdsad')
 
 urlpatterns = [
